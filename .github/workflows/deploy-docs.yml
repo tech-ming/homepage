@@ -36,6 +36,12 @@ jobs:
           corepack enable
           pnpm install --frozen-lockfile
 
+      - name: 创建docs目录和禁用Jekyll
+        run: |
+          mkdir -p docs
+          touch docs/.nojekyll
+          touch .nojekyll
+
       - name: 构建文档
         env:
           NODE_OPTIONS: --max_old_space_size=8192
