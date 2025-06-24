@@ -48,6 +48,8 @@ jobs:
         run: |-
           pnpm run docs:build
           touch src/.vuepress/dist/.nojekyll
+          cp -r src/.vuepress/dist/* .
+          touch .nojekyll
 
       - name: 调试信息
         run: |
