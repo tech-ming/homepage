@@ -49,6 +49,13 @@ jobs:
           pnpm run docs:build
           touch src/.vuepress/dist/.nojekyll
 
+      - name: 调试信息
+        run: |
+          echo "列出构建目录内容"
+          ls -la src/.vuepress/dist/
+          echo "列出资源目录内容"
+          ls -la src/.vuepress/dist/assets/ || echo "资源目录不存在"
+
       - name: 部署文档
         uses: JamesIves/github-pages-deploy-action@v4
         with:
