@@ -42,7 +42,6 @@ jobs:
         run: |-
           pnpm run docs:build
           touch src/.vuepress/dist/.nojekyll
-          touch .nojekyll
 
       - name: 部署文档
         uses: JamesIves/github-pages-deploy-action@v4
@@ -50,3 +49,7 @@ jobs:
           # 部署文档
           branch: gh-pages
           folder: src/.vuepress/dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
+          clean-exclude: |
+            .nojekyll
