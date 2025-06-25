@@ -1,22 +1,29 @@
 ---
-icon:
 date: 2025-06-23
 category:
   - flutter
+  - ios
 tag:
+  - windows
+  - vmware
+  - macos
+  - packaging
 ---
 
-# Flutter 在 Windows 中打包 iOS 安装包并安装
+# Flutter Windows 环境下 iOS 应用打包与安装指南
+
+## 📋 版本信息
+
+- **Windows**: 11
 
 ## 前言
 
-站主电脑是 Windows，想打包 iOS 包无从下手，最终选用免费的虚拟机方案。
+Futtler iOS打包无从下手，最后选用免费的虚拟机方案。
 
 ## 参考链接
 
 1. [Flutter iOS 打包教程](https://juejin.cn/post/7304607652016996378#heading-0)
 2. [macOS 在 AMD Ryzen/Intel VMware 安装指南](https://forum.amd-osx.com/threads/mac-os-install-on-amd-ryzen-intel-vmware-opencore-improved-performance-works-with-sequoia-sonoma-etc.4696/)
-3. [DeepSeek AI 助手](https://chat.deepseek.com/)
 
 ## 经验总结
 
