@@ -1,4 +1,4 @@
 User-agent:*
 Disallow:
 
-Sitemap: https://tech-ming.github.io/sitemap.xml
+Sitemap: https://tech-ming.github.io/homepage/sitemap.xml
