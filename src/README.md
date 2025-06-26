@@ -5,7 +5,7 @@ icon: house
 title: 主页
 heroImage: 
 heroText: 我的博客
-heroFullScreen: true
+heroFullScreen: false
 tagline:  
 projects:
   # - icon: folder-open

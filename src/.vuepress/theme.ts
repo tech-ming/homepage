@@ -14,7 +14,7 @@ export default hopeTheme({
 
   logo: "https://avatars.githubusercontent.com/u/108599517?s=96&v=4",
 
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "tech-ming/homepage",
 
   docsDir: "src",
 
