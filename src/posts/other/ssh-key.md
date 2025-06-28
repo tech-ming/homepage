@@ -2,15 +2,18 @@
 date: 2025-06-25
 category:
   - ssh
-  - security
+  - git
 tag:
   - ssh-key
   - authentication
   - security
-  - git
 ---
 
 # SSH Key 管理指南
+
+## 📋 版本信息
+
+- **Windows**: 11
 
 ## 安全原则
 
