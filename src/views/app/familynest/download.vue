@@ -77,19 +77,31 @@
             <div class="platform-icon android-icon"></div>
             <h3>Android</h3>
             <p>适用于 Android 8.0 及以上版本</p>
-            <button class="download-btn-large">立即下载</button>
+            <button class="download-btn-large" @click="showBuildingMessage">立即下载</button>
           </div>
           <div class="download-card">
             <div class="platform-icon ios-icon"></div>
             <h3>iOS</h3>
             <p>适用于 iOS 12.0 及以上版本</p>
-            <button class="download-btn-large">App Store</button>
+            <button class="download-btn-large" @click="showBuildingMessage">App Store</button>
           </div>
           <div class="download-card">
             <div class="platform-icon harmony-icon"></div>
             <h3>鸿蒙</h3>
             <p>适用于 HarmonyOS 2.0 及以上版本</p>
-            <button class="download-btn-large">华为应用市场</button>
+            <button class="download-btn-large" @click="showBuildingMessage">华为应用市场</button>
+          </div>
+        </div>
+      </div>
+      <!-- 提示弹窗 -->
+      <div class="building-message" v-if="showMessage">
+        <div class="message-content">
+          <div class="message-header">
+            <h3>提示</h3>
+            <button class="close-btn" @click="closeMessage">&times;</button>
+          </div>
+          <div class="message-body">
+            <p>功能正在建设中，敬请期待！</p>
           </div>
         </div>
       </div>
@@ -135,6 +147,11 @@
 <script>
 export default {
   name: 'FamilyNestDownload',
+  data() {
+    return {
+      showMessage: false
+    }
+  },
   mounted() {
     // 添加滚动动画效果
     this.initScrollAnimations();
@@ -158,6 +175,12 @@ export default {
       document.querySelectorAll('.feature-item, .function-card, .benefit-item, .download-card').forEach(el => {
         observer.observe(el);
       });
+    },
+    showBuildingMessage() {
+      this.showMessage = true;
+    },
+    closeMessage() {
+      this.showMessage = false;
     }
   }
 }
@@ -485,6 +508,7 @@ html {
   background: #1a202c;
   color: white;
   text-align: center;
+  position: relative;
 }
 
 .download-section .section-title {
@@ -559,6 +583,63 @@ html {
 .download-btn-large:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* 提示弹窗样式 */
+.building-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.message-content {
+  background: white;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  color: #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.message-header h3 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.2rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #718096;
+}
+
+.message-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.message-body p {
+  font-size: 1.1rem;
+  margin: 10px 0;
 }
 
 /* Footer */

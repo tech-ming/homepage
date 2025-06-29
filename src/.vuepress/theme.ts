@@ -25,7 +25,7 @@ export default hopeTheme({
   sidebar,
 
   // 页脚
-  footer: "默认页脚",
+  footer: "本站文章由AI润色，如有错误请指正",
   displayFooter: true,
 
   // 博客相关

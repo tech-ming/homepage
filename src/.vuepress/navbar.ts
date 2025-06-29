@@ -29,8 +29,9 @@ export default navbar([
         icon: "",
         prefix: "app/familynest/",
         children: [
-          { text: "下载", icon: "line-md:download", link: "download" },
           { text: "隐私协议", icon: "shield", link: "privacyAgreement" },
+          { text: "下载", icon: "line-md:download", link: "download" },
+          { text: "测试", icon: "material-icon-theme:test-ts", link: "umeng-test" },
         ],
       },
     ],
