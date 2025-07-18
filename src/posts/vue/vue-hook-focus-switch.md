@@ -29,9 +29,7 @@ tag:
 
 ## 🚀 实现方式
 
-### 基本用法
-
-在 `el-form` 组件上添加回车事件监听：
+### 基础用法
 
 ```vue
 <el-form ref="formRef" @keyup.enter.capture="handleFormKeyEnter">
@@ -50,9 +48,7 @@ const handleFormKeyEnter = (e: any) => {
 </script>
 ```
 
-### 核心工具函数
-
-下面是实现表单回车切换焦点的核心工具函数：
+## 🔧 hook源码
 
 ```ts
 /**
