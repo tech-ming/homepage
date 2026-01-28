@@ -141,23 +141,6 @@ jarsigner -verify -verbose -certs app-release.apk
 - 使用加密存储备份文件
 - 定期验证备份文件的完整性
 
-## 🚨 注意事项
-
-### 1. 重要提醒
-- **备份签名文件**: 丢失签名文件将无法更新应用
-- **版本一致性**: 同一应用的更新必须使用相同的签名文件
-- **团队协作**: 确保团队成员都能访问签名文件
-
-### 2. 路径配置
-- 签名文件路径使用绝对路径或相对于项目根目录的路径
-- 确保路径中不包含中文字符
-- 使用正斜杠 `/` 作为路径分隔符
-
-### 3. 环境要求
-- 确保已正确安装 JDK
-- 验证 `JAVA_HOME` 环境变量配置
-- 确保 `keytool` 命令可用
-
 ## ❗ 常见问题与解决方案
 
 ### 1. CMD 中运行 `java -version` 无反应
@@ -177,44 +160,99 @@ java -version
 keytool -help
 ```
 
-### 2. 签名配置错误
-
-**常见错误**：
-```
-Keystore was tampered with, or password was incorrect
-```
-
-**解决方案**：
-1. 检查 `key.properties` 文件中的密码是否正确
-2. 确认 JKS 文件路径是否正确
-3. 验证 JKS 文件是否损坏
-
-### 3. 构建失败
-
-**常见错误**：
-```
-Could not load keystore
-```
-
-**解决方案**：
-1. 检查 JKS 文件是否存在
-2. 验证文件路径配置
-3. 确认文件权限设置
-
-## 📚 参考资源
-
-### 官方文档
-- [Android Developer - App Signing](https://developer.android.com/studio/publish/app-signing)
-- [Flutter - Build and release an Android app](https://docs.flutter.dev/deployment/android)
-
-### 相关工具
-- [Keytool 官方文档](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html)
-- [APK Signer 工具](https://developer.android.com/studio/command-line/apksigner)
-
-### 社区资源
-- [Flutter中生成Android的jks签名文件并使用](https://blog.51cto.com/u_16213374/12314149)
-- [Flutter配置签名打包全流程填坑笔记](https://www.cnblogs.com/DBCooper/p/11145451.html)
-
----
-
 **⚠️ 重要提醒**: 请妥善保管您的签名文件，一旦丢失将无法更新应用！
+
+## 🔧 团队共享 Debug 签名配置
+
+### 为什么需要共享 Debug 签名？
+
+默认情况下，Android Studio 会为每台电脑自动生成独立的 debug.keystore，存放在 `~/.android/debug.keystore`。这会导致以下问题：
+
+- 华为地图等需要签名指纹的服务，每换一台电脑就要重新添加指纹
+- 团队成员之间签名不一致，无法覆盖安装调试
+- CI/CD 环境需要额外配置
+
+### 1. 生成项目专用 Debug 签名
+
+```bash
+keytool -genkey -v -keystore debug.keystore -alias debug -keyalg RSA -keysize 2048 -validity 36500 -storepass 123456 -keypass 123456
+```
+
+**参数说明**：
+- `-validity 36500`: 有效期 100 年，避免过期
+- `-storepass 123456`: 密钥库密码（debug 用，简单即可）
+- `-keypass 123456`: 密钥密码
+- `-alias debug`: 密钥别名
+
+### 2. 配置 build.gradle.kts
+
+将 `debug.keystore` 放到 `android/` 目录下，然后修改 `android/app/build.gradle.kts`：
+
+```kotlin
+android {
+    signingConfigs {
+        // Debug 签名配置 - 使用项目专用 debug 密钥
+        getByName("debug") {
+            storeFile = file("../debug.keystore")
+            storePassword = "123456"
+            keyAlias = "debug"
+            keyPassword = "123456"
+        }
+
+        create("release") {
+            // ... release 签名配置 ...
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        release {
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+}
+```
+
+### 3. 提交到 Git
+
+```bash
+git add android/debug.keystore
+git commit -m "添加项目专用 debug 签名"
+```
+
+> **注意**：debug.keystore 可以提交到 git（密码简单无安全风险），但 **release 签名绝对不要提交**！
+
+## 🔑 提取签名指纹
+
+华为地图、微信登录等服务需要在控制台配置签名指纹，使用以下命令提取：
+
+### 提取 Debug 签名指纹
+
+```bash
+# 项目专用 debug 签名
+keytool -list -v -keystore android/debug.keystore -alias debug -storepass 123456
+
+# 或 Android Studio 默认 debug 签名（Windows）
+keytool -list -v -keystore %USERPROFILE%\.android\debug.keystore -alias androiddebugkey -storepass android -keypass android
+
+# 或 Android Studio 默认 debug 签名（Mac/Linux）
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+```
+
+### 提取 Release 签名指纹
+
+```bash
+keytool -list -v -keystore your-release-key.jks -alias your-alias
+```
+
+### 输出示例
+
+```
+证书指纹:
+         SHA1: XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX
+         SHA256: XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX
+```
+
+复制 **SHA256** 指纹到对应平台的控制台即可。
